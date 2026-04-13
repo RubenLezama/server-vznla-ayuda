@@ -4,7 +4,7 @@ Backend MVP para **Venezuela Ayuda**, construido con **NestJS + Prisma + Postgre
 
 La idea de este backend es sentar una base limpia y entendible para el proyecto: autenticacion, publicaciones, ofertas para ayudar, chat en vivo y valoraciones simples. No intenta resolver todo de una vez; intenta resolver bien lo minimo viable para que el producto pueda empezar a moverse.
 
-## Que incluye este MVP
+## Qué incluye este MVP
 
 - Registro e inicio de sesion con JWT
 - Perfil basico de usuario
@@ -19,7 +19,7 @@ La idea de este backend es sentar una base limpia y entendible para el proyecto:
 - Archivo OpenAPI para importar en Yaak
 - Prisma con migraciones y seed
 
-## Stack
+## Stack 🧱
 
 - Node.js `22 LTS`
 - NestJS `11`
@@ -28,7 +28,24 @@ La idea de este backend es sentar una base limpia y entendible para el proyecto:
 - pnpm
 - Socket.IO
 
-## Estructura rapida
+## Qué es Socket.IO 💬
+
+`Socket.IO` es una librería para comunicación en tiempo real entre frontend y backend.
+
+En este proyecto se usa para el chat. Eso significa que:
+
+- un usuario envia un mensaje
+- el backend lo recibe al instante
+- el otro usuario lo ve casi en tiempo real
+
+Sin `Socket.IO`, el frontend tendría que estar preguntando cada pocos segundos si hay mensajes nuevos. Con `Socket.IO`, el servidor puede empujar los eventos apenas pasan.
+
+En corto:
+
+- `REST` sirve para operaciones normales como login, crear posts o aceptar ofertas
+- `Socket.IO` sirve para eventos en vivo como el chat
+
+## Estructura rápida 📁
 
 ```text
 src/
@@ -51,7 +68,7 @@ scripts/
   export-openapi.cjs
 ```
 
-## Requisitos
+## Requisitos ✅
 
 - Node.js `22 LTS`
 - pnpm
@@ -65,7 +82,7 @@ Si trabajas en **Windows**, puedes correr el proyecto sin WSL siempre que tengas
 - pnpm instalado
 - PostgreSQL 17 instalado y corriendo
 
-## Variables de entorno
+## Variables de entorno ⚙️
 
 Existe un archivo de ejemplo: [.env.example](/home/ruben/repo/server-vznla-ayuda/.env.example:1)
 
@@ -93,7 +110,7 @@ JWT_EXPIRES_IN="7d"
 CORS_ORIGIN="http://localhost:3001,http://127.0.0.1:3001,http://localhost:5173,http://127.0.0.1:5173"
 ```
 
-## Instalacion
+## Instalación 🚀
 
 ### WSL / Linux
 
@@ -107,7 +124,7 @@ pnpm install
 pnpm install
 ```
 
-## Prisma explicado simple
+## Prisma explicado simple 🗃️
 
 Prisma es la capa que conecta el backend con PostgreSQL.
 
@@ -125,7 +142,7 @@ En este proyecto Prisma vive principalmente en:
 - [prisma/seed.ts](/home/ruben/repo/server-vznla-ayuda/prisma/seed.ts:1)
 - [src/prisma/prisma.service.ts](/home/ruben/repo/server-vznla-ayuda/src/prisma/prisma.service.ts:1)
 
-## Primer arranque local
+## Primer arranque local 🏁
 
 Este es el flujo recomendado la primera vez.
 
@@ -182,7 +199,7 @@ La API quedara disponible en:
 - `http://localhost:8000/api/v1`
 - Swagger: `http://localhost:8000/docs`
 
-## Esto no se hace cada vez
+## Esto no se hace cada vez 🔁
 
 No. Ese bloque completo es para la **primera vez** o cuando estas montando el proyecto desde cero en una maquina nueva.
 
@@ -219,7 +236,7 @@ O si quieres que el comando se asegure de que `.env` exista:
 pnpm dev:up
 ```
 
-## Flujo diario recomendado
+## Flujo diario recomendado 🧭
 
 Si no cambiaste dependencias ni Prisma, normalmente basta con esto:
 
@@ -227,7 +244,7 @@ Si no cambiaste dependencias ni Prisma, normalmente basta con esto:
 pnpm start:dev
 ```
 
-## Cuando si debes correr otros comandos otra vez
+## Cuando sí debes correr otros comandos otra vez
 
 - `pnpm install`
   Solo cuando cambie `package.json` o bajes el proyecto por primera vez.
@@ -250,7 +267,7 @@ pnpm start:dev
 - `pnpm db:reset`
   Solo cuando quieras borrar y reconstruir la base completa en desarrollo.
 
-## Script utiles nuevos
+## Scripts útiles nuevos 🛠️
 
 ```bash
 pnpm dev:first-run
@@ -258,7 +275,7 @@ pnpm dev:up
 pnpm dev:reset
 ```
 
-Que hace cada uno:
+Qué hace cada uno:
 
 - `pnpm dev:first-run`
   Ideal para una maquina nueva o para la primera instalacion en Windows o WSL/Linux.
@@ -269,7 +286,7 @@ Que hace cada uno:
 - `pnpm dev:reset`
   Reinicia la base de desarrollo y vuelve a cargar el seed.
 
-## URL base correcta
+## URL base correcta 🌐
 
 Ahora el backend responde tambien en la raiz:
 
@@ -277,7 +294,18 @@ Ahora el backend responde tambien en la raiz:
 http://localhost:8000/
 ```
 
-Esa URL devuelve un JSON simple con:
+Esa URL devuelve un JSON simple con este formato:
+
+```json
+{
+  "status": "ok",
+  "service": "venezuela-ayuda-api",
+  "apiBaseUrl": "http://localhost:8000/api/v1",
+  "docsUrl": "http://localhost:8000/docs"
+}
+```
+
+Eso incluye:
 
 - estado del servicio
 - `apiBaseUrl`
@@ -295,7 +323,7 @@ Y Swagger sigue viviendo en:
 http://localhost:8000/docs
 ```
 
-## Flujo normal cuando cambies el schema
+## Flujo normal cuando cambies el schema 🧬
 
 Cuando edites `prisma/schema.prisma`, usa este flujo:
 
@@ -316,7 +344,7 @@ Ejemplo:
 pnpm db:migrate --name add_user_location
 ```
 
-## Comandos utiles
+## Comandos útiles 📌
 
 ```bash
 pnpm start:dev
@@ -331,11 +359,11 @@ pnpm db:studio
 pnpm docs:generate
 ```
 
-## Yaak
+## Yaak 📬
 
 Este proyecto genera un archivo OpenAPI que puedes importar en Yaak para tener todos los endpoints listos.
 
-Generalo asi:
+Genéralo así:
 
 ```bash
 pnpm docs:generate
@@ -347,11 +375,11 @@ Archivo generado:
 
 En Yaak, importa ese JSON como especificacion OpenAPI.
 
-## Como probar los endpoints
+## Cómo probar los endpoints 🧪
 
 Tienes tres formas comodas:
 
-### 1. Swagger, la mas rapida
+### 1. Swagger, la más rápida
 
 Levanta el proyecto:
 
@@ -375,7 +403,7 @@ Flujo recomendado en Swagger:
    - `GET /offers`
    - `GET /chat/rooms`
 
-### 2. Yaak, para trabajar mas comodo
+### 2. Yaak, para trabajar más cómodo
 
 1. Genera o regenera el archivo OpenAPI:
 
@@ -401,11 +429,11 @@ Authorization: Bearer TU_TOKEN
 
 6. Ahora ya puedes probar las rutas protegidas.
 
-## Comandos para matar un puerto ocupado
+## Comandos para matar un puerto ocupado 🧯
 
 Si alguna vez el backend no arranca porque el puerto `8000` ya esta ocupado, puedes liberar el puerto antes de volver a levantar el proyecto.
 
-### Opcion 1: usando kill-port con npm
+### Opción 1: usando kill-port con npm
 
 Instalacion global:
 
@@ -425,7 +453,7 @@ Si quieres matar varios:
 kill-port 8000 5432
 ```
 
-### Opcion 2: WSL / Linux desde terminal
+### Opción 2: WSL / Linux desde terminal
 
 Ver que proceso usa el puerto:
 
@@ -445,7 +473,7 @@ O con `lsof` + `kill`:
 kill -9 $(lsof -t -i:8000)
 ```
 
-### Opcion 3: Windows desde terminal
+### Opción 3: Windows desde terminal
 
 Ver el proceso que usa el puerto:
 
@@ -459,7 +487,7 @@ Luego matar el PID:
 taskkill /PID TU_PID /F
 ```
 
-### Recomendacion practica
+### Recomendación práctica
 
 Si quieres algo simple y que funcione tanto en Windows como en WSL/Linux, la opcion mas comoda suele ser:
 
@@ -475,7 +503,7 @@ Puedes entrar con cualquiera de estos dos:
 - `donante@venezuela-ayuda.org`
 - `clinica@venezuela-ayuda.org`
 
-Contrasena:
+Contraseña:
 
 ```text
 Password123*
@@ -493,7 +521,7 @@ Password123*
 8. `POST /chat/rooms/:roomId/messages`
 9. `POST /reviews`
 
-### Ejemplo rapido de prueba real
+### Ejemplo rápido de prueba real
 
 Primero login:
 
@@ -522,7 +550,7 @@ Por ejemplo, para crear una publicacion:
 }
 ```
 
-## Endpoints principales
+## Endpoints principales 🔌
 
 ### Auth
 
@@ -570,7 +598,7 @@ Eventos:
 - `POST /api/v1/reviews`
 - `GET /api/v1/reviews/me/received`
 
-## Seed incluido
+## Seed incluido 🌱
 
 El seed crea:
 
@@ -585,7 +613,7 @@ Credenciales de prueba:
 - `clinica@venezuela-ayuda.org`
 - contrasena para ambos: `Password123*`
 
-## Decisiones de este MVP
+## Decisiones de este MVP 🧠
 
 Para mantener la base limpia y no sobrecargar el primer sprint:
 
@@ -594,7 +622,7 @@ Para mantener la base limpia y no sobrecargar el primer sprint:
 - review sencilla despues de completar la ayuda
 - sin adjuntos, sin notificaciones push y sin moderacion avanzada por ahora
 
-## Si algo no levanta
+## Si algo no levanta 🚨
 
 Revisa en este orden:
 
@@ -605,7 +633,7 @@ Revisa en este orden:
 5. `pnpm db:migrate --name init`
 6. `pnpm start:dev`
 
-## Nota para el equipo
+## Nota para el equipo 🤝
 
 Este backend esta pensado para que una persona trabajando en WSL y otra en Windows puedan compartir el mismo proyecto sin pelearse con el entorno. Mientras ambas usen:
 
