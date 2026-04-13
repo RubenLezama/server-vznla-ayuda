@@ -261,7 +261,7 @@ pnpm dev:reset
 Que hace cada uno:
 
 - `pnpm dev:first-run`
-  Ideal para una maquina nueva o para tu amiga en Windows la primera vez.
+  Ideal para una maquina nueva o para la primera instalacion en Windows o WSL/Linux.
 
 - `pnpm dev:up`
   Levanta el backend y se asegura de que `.env` exista.
