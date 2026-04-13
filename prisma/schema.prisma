@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  PERSON
+  ORGANIZATION
+}
+
+enum PostType {
+  REQUEST
+  DONATION
+}
+
+enum PostStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+enum PostCategory {
+  FOOD
+  MEDICINE
+  CLOTHING
+  SHELTER
+  HYGIENE
+  EDUCATION
+  OTHER
+}
+
+enum UrgencyLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id               String      @id @default(cuid())
+  email            String      @unique
+  passwordHash     String
+  firstName        String
+  lastName         String
+  organizationName String?
+  accountType      AccountType
+  bio              String?
+  city             String?
+  state            String?
+  country          String?     @default("Venezuela")
+  isActive         Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  posts            Post[]
+  offers           Offer[]
+  sentMessages     Message[]
+  roomsAsDonor     ChatRoom[]  @relation("ChatRoomDonor")
+  roomsAsOwner     ChatRoom[]  @relation("ChatRoomOwner")
+  reviewsWritten   Review[]    @relation("ReviewAuthor")
+  reviewsReceived  Review[]    @relation("ReviewTarget")
+}
+
+model Post {
+  id                String        @id @default(cuid())
+  title             String
+  description       String
+  type              PostType
+  status            PostStatus    @default(OPEN)
+  category          PostCategory
+  urgency           UrgencyLevel  @default(MEDIUM)
+  quantityNeeded    Int           @default(1)
+  quantityFulfilled Int           @default(0)
+  city              String?
+  state             String?
+  country           String?       @default("Venezuela")
+  authorId          String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  author            User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  offers            Offer[]
+  chatRooms         ChatRoom[]
+
+  @@index([authorId])
+  @@index([type, status, category])
+}
+
+model Offer {
+  id              String       @id @default(cuid())
+  postId          String
+  donorId         String
+  message         String?
+  quantityOffered Int          @default(1)
+  status          OfferStatus  @default(PENDING)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  acceptedAt      DateTime?
+  completedAt     DateTime?
+  post            Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  donor           User         @relation(fields: [donorId], references: [id], onDelete: Cascade)
+  chatRoom        ChatRoom?
+  reviews         Review[]
+
+  @@index([postId])
+  @@index([donorId])
+}
+
+model ChatRoom {
+  id        String    @id @default(cuid())
+  postId    String
+  offerId   String    @unique
+  donorId   String
+  ownerId   String
+  isOpen    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  offer     Offer     @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  donor     User      @relation("ChatRoomDonor", fields: [donorId], references: [id], onDelete: Cascade)
+  owner     User      @relation("ChatRoomOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@index([donorId])
+  @@index([ownerId])
+}
+
+model Message {
+  id        String    @id @default(cuid())
+  roomId    String
+  senderId  String
+  body      String
+  createdAt DateTime  @default(now())
+  seenAt    DateTime?
+  room      ChatRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender    User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, createdAt])
+}
+
+model Review {
+  id           String    @id @default(cuid())
+  offerId      String
+  authorId     String
+  targetUserId String
+  rating       Int
+  comment      String?
+  createdAt    DateTime  @default(now())
+  offer        Offer     @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  author       User      @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  targetUser   User      @relation("ReviewTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  @@unique([offerId, authorId])
+  @@index([targetUserId])
+}
+
