@@ -7,6 +7,7 @@ export const userPublicSelect = Prisma.validator<Prisma.UserSelect>()({
   lastName: true,
   organizationName: true,
   accountType: true,
+  phone: true,
   bio: true,
   city: true,
   state: true,
