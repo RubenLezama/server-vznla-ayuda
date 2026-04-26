@@ -18,7 +18,7 @@ import { JwtStrategy } from './jwt.strategy';
           'change-this-in-real-projects',
         signOptions: {
           expiresIn: (configService.get<string>('JWT_EXPIRES_IN') ??
-            '7d') as any,
+            '24h') as any,
         },
       }),
     }),

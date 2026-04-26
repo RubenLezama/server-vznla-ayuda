@@ -12,6 +12,8 @@ import { userPublicSelect } from '../users/user-public.select';
 import * as bcrypt from 'bcryptjs';
 import type { JwtPayload } from '../common/interfaces/jwt-payload.interface';
 
+const AUTH_SESSION_TTL_SECONDS = 24 * 60 * 60;
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -95,11 +97,14 @@ export class AuthService {
       accountType: user.accountType,
     };
 
-    const accessToken = await this.jwtService.signAsync(payload);
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: AUTH_SESSION_TTL_SECONDS,
+    });
 
     return {
       accessToken,
       tokenType: 'Bearer',
+      expiresIn: AUTH_SESSION_TTL_SECONDS,
     };
   }
 }
