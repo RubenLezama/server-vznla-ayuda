@@ -59,6 +59,7 @@ model User {
   organizationName String?
   accountType      AccountType
   bio              String?
+  phone            String?
   city             String?
   state            String?
   country          String?     @default("Venezuela")
