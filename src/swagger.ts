@@ -9,7 +9,7 @@ export function buildSwaggerDocument(app: INestApplication) {
     )
     .setVersion('1.0.0')
     .addBearerAuth()
-    .addServer('http://localhost:8000', 'Local')
+    .addServer('/', 'Current host')
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {

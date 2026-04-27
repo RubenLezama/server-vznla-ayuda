@@ -8,4 +8,12 @@ export class AppService {
       service: 'venezuela-ayuda-api',
     };
   }
+
+  getPing() {
+    return {
+      ok: true,
+      service: 'venezuela-ayuda-api',
+      timestamp: new Date().toISOString(),
+    };
+  }
 }

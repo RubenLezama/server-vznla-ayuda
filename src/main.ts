@@ -33,12 +33,18 @@ async function bootstrap() {
   });
 
   const expressApp = app.getHttpAdapter().getInstance();
-  expressApp.get('/', (_request: Request, response: Response) => {
+  expressApp.set('trust proxy', 1);
+  expressApp.get('/', (request: Request, response: Response) => {
+    const protocol =
+      request.header('x-forwarded-proto') ?? request.protocol ?? 'http';
+    const host = request.header('host') ?? `localhost:${port}`;
+    const baseUrl = `${protocol}://${host}`;
+
     response.json({
       status: 'ok',
       service: 'venezuela-ayuda-api',
-      apiBaseUrl: `http://localhost:${port}/api/v1`,
-      docsUrl: `http://localhost:${port}/docs`,
+      apiBaseUrl: `${baseUrl}/api/v1`,
+      docsUrl: `${baseUrl}/docs`,
     });
   });
 
@@ -51,6 +57,6 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();

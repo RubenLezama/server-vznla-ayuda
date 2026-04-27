@@ -21,4 +21,20 @@ export class AppController {
   getHealth() {
     return this.appService.getHealth();
   }
+
+  @ApiOperation({ summary: 'Ping ligero para monitores o cron jobs' })
+  @ApiOkResponse({
+    description: 'Respuesta ligera para mantener despierto el servicio.',
+    schema: {
+      example: {
+        ok: true,
+        service: 'venezuela-ayuda-api',
+        timestamp: '2026-04-27T17:20:00.000Z',
+      },
+    },
+  })
+  @Get('ping')
+  getPing() {
+    return this.appService.getPing();
+  }
 }

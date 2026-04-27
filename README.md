@@ -244,6 +244,38 @@ Si no cambiaste dependencias ni Prisma, normalmente basta con esto:
 pnpm start:dev
 ```
 
+## Deploy en Render
+
+Esta rama incluye `render.yaml` para crear el backend en Render usando una base PostgreSQL externa, por ejemplo Neon.
+
+### Opcion recomendada: Blueprint
+
+1. Sube la rama `render-deploy-test` a GitHub.
+2. En Render, crea un nuevo Blueprint y selecciona este repositorio.
+3. Render detectara `render.yaml`.
+4. Configura `CORS_ORIGIN` con la URL publica del frontend.
+5. Render generara `JWT_SECRET`.
+6. Configura `DATABASE_URL` con el connection string de Neon.
+
+Comandos usados por Render:
+
+```bash
+corepack enable && pnpm install --frozen-lockfile && pnpm render:build
+pnpm render:start
+```
+
+`pnpm render:start` aplica migraciones con `prisma migrate deploy` antes de levantar NestJS.
+
+### Variables necesarias
+
+```env
+DATABASE_URL="postgresql://..."
+JWT_SECRET="valor-seguro"
+JWT_EXPIRES_IN="7d"
+CORS_ORIGIN="https://tu-frontend.onrender.com"
+NODE_ENV="production"
+```
+
 ## Cuando sí debes correr otros comandos otra vez
 
 - `pnpm install`
