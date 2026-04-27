@@ -9,4 +9,13 @@ describe('AppService', () => {
       service: 'venezuela-ayuda-api',
     });
   });
+
+  it('should return a ping payload', () => {
+    const service = new AppService();
+    const ping = service.getPing();
+
+    expect(ping.ok).toBe(true);
+    expect(ping.service).toBe('venezuela-ayuda-api');
+    expect(new Date(ping.timestamp).toString()).not.toBe('Invalid Date');
+  });
 });
