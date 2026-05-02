@@ -9,6 +9,7 @@ import {
   MaxLength,
   Min,
   MinLength,
+  IsArray
 } from 'class-validator';
 
 export class CreatePostDto {
@@ -64,4 +65,31 @@ export class CreatePostDto {
   @IsString()
   @MaxLength(80)
   country?: string;
+
+  @ApiPropertyOptional({ example: '2026-12-31T00:00:00Z' })
+  @IsOptional()
+  @Type(() => Date)
+  deadline?: Date;
+
+  @ApiPropertyOptional({ example: 'Fundación Esperanza' })
+  @IsOptional()
+  @IsString()
+  contactName?: string;
+
+  @ApiPropertyOptional({ example: '+58 414 1234567' })
+  @IsOptional()
+  @IsString()
+  contactPhone?: string;
+
+  @ApiPropertyOptional({ example: 'WhatsApp' })
+  @IsOptional()
+  @IsString()
+  contactPreference?: string;
+
+  @ApiPropertyOptional({ example: ['data:image/png;base64,...'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
+
 }
