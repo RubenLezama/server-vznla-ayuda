@@ -10,11 +10,19 @@ import { ChatModule } from './chat/chat.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { PrismaModule } from './prisma/prisma.module';
 
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { UploadsModule } from './uploads/uploads.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'uploads'),
+      serveRoot: '/uploads/',
     }),
     PrismaModule,
     AuthModule,
@@ -23,6 +31,7 @@ import { PrismaModule } from './prisma/prisma.module';
     OffersModule,
     ChatModule,
     ReviewsModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
