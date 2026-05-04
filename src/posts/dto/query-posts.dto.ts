@@ -44,4 +44,14 @@ export class QueryPostsDto {
   @IsOptional()
   @IsString()
   authorId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  startDate?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  endDate?: string;
 }

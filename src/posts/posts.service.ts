@@ -33,6 +33,10 @@ export class PostsService {
         city: dto.city?.trim(),
         state: dto.state?.trim(),
         country: dto.country?.trim() ?? 'Venezuela',
+        deadline: dto.deadline,
+        contactName: dto.contactName?.trim(),
+        contactPhone: dto.contactPhone?.trim(),
+        contactPreference: dto.contactPreference?.trim(),
         authorId,
       },
       include: postInclude,
@@ -46,6 +50,10 @@ export class PostsService {
       status: query.status ?? PostStatus.OPEN,
       urgency: query.urgency,
       authorId: query.authorId,
+      createdAt: (query.startDate || query.endDate) ? {
+        ...(query.startDate ? { gte: new Date(query.startDate) } : {}),
+        ...(query.endDate ? { lte: new Date(query.endDate) } : {})
+      } : undefined,
       city: query.city
         ? {
             contains: query.city,
